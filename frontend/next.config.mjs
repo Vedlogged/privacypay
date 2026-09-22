@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  transpilePackages: ['@privacy-pay/contract']
+  reactStrictMode: true
 };
 
 export default nextConfig;

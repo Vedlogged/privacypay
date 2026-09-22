@@ -20,7 +20,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@privacy-pay/contract": ["../contract/src/index.ts"]
+      "@/contract": ["./src/contract/index.ts"],
+      "@privacy-pay/contract": ["./src/contract/index.ts"]
     }
   },
   "include": [
