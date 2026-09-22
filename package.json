@@ -1,0 +1,26 @@
+{
+  "name": "privacy-pay",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Privacy-first SaaS subscriptions with fiat-friendly payments on Midnight Network",
+  "workspaces": [
+    "contract",
+    "frontend"
+  ],
+  "scripts": {
+    "test": "npm run test --workspace=contract",
+    "build": "npm run build --workspace=frontend",
+    "dev": "npm run dev --workspace=frontend",
+    "lint": "npm run lint --workspace=frontend"
+  },
+  "keywords": [
+    "midnight-network",
+    "compact",
+    "zero-knowledge",
+    "privacy-preserving",
+    "saas-subscriptions",
+    "fiat-payments"
+  ],
+  "author": "PrivacyPay Team",
+  "license": "Apache-2.0"
+}
