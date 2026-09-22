@@ -1,0 +1,55 @@
+pragma language_version >= 0.20;
+
+import CompactStandardLibrary;
+
+export enum SubscriptionState {
+    INACTIVE,
+    ACTIVE,
+    CANCELLED
+}
+
+// Public ledger state stored on Midnight blockchain
+export ledger state: SubscriptionState;
+export ledger activePlanId: Field;
+export ledger subscriberCommitment: Bytes<32>;
+export ledger sequenceNumber: Counter;
+
+// Private witness function executed locally on subscriber's client
+witness getSubscriberSecret(): Bytes<32>;
+
+// Contract constructor initializes state
+constructor(initialPlanId: Field) {
+    state = SubscriptionState.INACTIVE;
+    activePlanId = initialPlanId;
+    sequenceNumber.increment(1);
+}
+
+// Authorizes a subscription by computing and publishing the cryptographic commitment
+export circuit authorize(planId: Field): Bytes<32> {
+    assert(state == SubscriptionState.INACTIVE || state == SubscriptionState.CANCELLED, "Subscription is already active");
+    assert(planId == activePlanId, "Invalid plan ID");
+
+    // Retrieve private subscriber secret via off-chain witness
+    const secret = getSubscriberSecret();
+
+    // Compute cryptographic commitment H(secret, planId) and disclose only the commitment
+    const commitment = disclose(hash(secret, planId));
+
+    subscriberCommitment = commitment;
+    state = SubscriptionState.ACTIVE;
+    sequenceNumber.increment(1);
+
+    return commitment;
+}
+
+// Cancels the subscription if caller proves knowledge of the secret preimage
+export circuit cancel(): void {
+    assert(state == SubscriptionState.ACTIVE, "Subscription is not active");
+
+    const secret = getSubscriberSecret();
+    const expectedCommitment = disclose(hash(secret, activePlanId));
+    assert(subscriberCommitment == expectedCommitment, "Caller does not own subscription commitment");
+
+    state = SubscriptionState.CANCELLED;
+    sequenceNumber.increment(1);
+}

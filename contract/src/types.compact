@@ -1,0 +1,7 @@
+pragma language_version >= 0.20;
+
+export enum SubscriptionState {
+    INACTIVE,
+    ACTIVE,
+    CANCELLED
+}
