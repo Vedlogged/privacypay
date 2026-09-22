@@ -1,7 +1,32 @@
 pragma language_version >= 0.20;
 
 export enum SubscriptionState {
-    INACTIVE,
+    CREATED,
+    AUTHORIZED,
     ACTIVE,
-    CANCELLED
+    BILLING_DUE,
+    PROCESSING,
+    PAID,
+    NEXT_CYCLE,
+    FAILED,
+    CANCELLED,
+    EXPIRED,
+    PAST_DUE
+}
+
+export struct PlanMetadata {
+    planId: Field;
+    merchantId: Bytes<32>;
+    priceUsdCents: Uint<32>;
+    billingIntervalDays: Uint<16>;
+    active: Boolean;
+}
+
+export struct SubscriptionRecord {
+    commitment: Bytes<32>;
+    planId: Field;
+    state: SubscriptionState;
+    currentPeriodStart: Uint<64>;
+    currentPeriodEnd: Uint<64>;
+    cycleCount: Counter;
 }

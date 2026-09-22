@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Database, Lock, Shield, Hash, RefreshCw } from 'lucide-react';
+import { Database, Lock, Shield, Hash, RefreshCw, UserCheck } from 'lucide-react';
 import { ContractLedgerState, SubscriptionState } from '@privacy-pay/contract';
 import { PrivacyBadge } from './PrivacyBadge';
 
@@ -15,11 +15,23 @@ export const StateInspector: React.FC<StateInspectorProps> = ({ ledgerState, sec
     switch (state) {
       case SubscriptionState.ACTIVE:
         return <span className="badge badge-active">ACTIVE</span>;
+      case SubscriptionState.PAID:
+        return <span className="badge badge-active">PAID</span>;
+      case SubscriptionState.AUTHORIZED:
+        return <span className="badge badge-privacy">AUTHORIZED</span>;
+      case SubscriptionState.BILLING_DUE:
+      case SubscriptionState.PROCESSING:
+        return <span className="badge badge-privacy">{state}</span>;
+      case SubscriptionState.NEXT_CYCLE:
+        return <span className="badge badge-active">NEXT_CYCLE</span>;
       case SubscriptionState.CANCELLED:
         return <span className="badge badge-cancelled">CANCELLED</span>;
-      case SubscriptionState.INACTIVE:
+      case SubscriptionState.PAST_DUE:
+      case SubscriptionState.FAILED:
+        return <span className="badge badge-cancelled">{state}</span>;
+      case SubscriptionState.CREATED:
       default:
-        return <span className="badge badge-inactive">INACTIVE</span>;
+        return <span className="badge badge-inactive">{state || 'CREATED'}</span>;
     }
   };
 
@@ -55,6 +67,27 @@ export const StateInspector: React.FC<StateInspectorProps> = ({ ledgerState, sec
           </div>
         </div>
 
+        {/* Merchant Address & Cycle Count */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div style={{ background: 'rgba(0, 0, 0, 0.25)', padding: '0.85rem', borderRadius: '0.625rem', border: '1px solid var(--border-subtle)' }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '0.35rem' }}>
+              Merchant Address
+            </span>
+            <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>
+              {ledgerState.merchantAddress.slice(0, 10)}...{ledgerState.merchantAddress.slice(-6)}
+            </span>
+          </div>
+
+          <div style={{ background: 'rgba(0, 0, 0, 0.25)', padding: '0.85rem', borderRadius: '0.625rem', border: '1px solid var(--border-subtle)' }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '0.35rem' }}>
+              Billing Cycle Count
+            </span>
+            <span style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--accent-secondary)', fontFamily: 'var(--font-mono)' }}>
+              Cycle #{ledgerState.cycleCount ? ledgerState.cycleCount.toString() : '0'}
+            </span>
+          </div>
+        </div>
+
         {/* Subscriber Commitment */}
         <div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
@@ -75,7 +108,7 @@ export const StateInspector: React.FC<StateInspectorProps> = ({ ledgerState, sec
               Ledger Sequence Counter
             </span>
             <span style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>
-              Replay protection counter
+              Replay protection & transition counter
             </span>
           </div>
           <span style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--accent-secondary)', fontFamily: 'var(--font-mono)' }}>
@@ -89,10 +122,10 @@ export const StateInspector: React.FC<StateInspectorProps> = ({ ledgerState, sec
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               <Lock size={14} color="var(--accent-primary)" />
               <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-primary)' }}>
-                Client-Side Secret (Witness)
+                Client-Side Secret (Witness Preimage)
               </span>
             </div>
-            <PrivacyBadge type="PRIVATE" label="Never Sent On-Chain" />
+            <PrivacyBadge type="PRIVATE" label="Held in Client Memory" />
           </div>
 
           <div style={{

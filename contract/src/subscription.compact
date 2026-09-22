@@ -3,30 +3,46 @@ pragma language_version >= 0.20;
 import CompactStandardLibrary;
 
 export enum SubscriptionState {
-    INACTIVE,
+    CREATED,
+    AUTHORIZED,
     ACTIVE,
-    CANCELLED
+    BILLING_DUE,
+    PROCESSING,
+    PAID,
+    NEXT_CYCLE,
+    FAILED,
+    CANCELLED,
+    EXPIRED,
+    PAST_DUE
 }
 
 // Public ledger state stored on Midnight blockchain
 export ledger state: SubscriptionState;
 export ledger activePlanId: Field;
+export ledger merchantAddress: Bytes<32>;
 export ledger subscriberCommitment: Bytes<32>;
 export ledger sequenceNumber: Counter;
+export ledger cycleCount: Counter;
 
 // Private witness function executed locally on subscriber's client
 witness getSubscriberSecret(): Bytes<32>;
 
-// Contract constructor initializes state
-constructor(initialPlanId: Field) {
-    state = SubscriptionState.INACTIVE;
+// Contract constructor initializes state with merchant identity and plan ID
+constructor(initialPlanId: Field, initialMerchant: Bytes<32>) {
+    state = SubscriptionState.CREATED;
     activePlanId = initialPlanId;
+    merchantAddress = initialMerchant;
+    subscriberCommitment = 0x0000000000000000000000000000000000000000000000000000000000000000;
     sequenceNumber.increment(1);
+    cycleCount.increment(0);
 }
 
 // Authorizes a subscription by computing and publishing the cryptographic commitment
 export circuit authorize(planId: Field): Bytes<32> {
-    assert(state == SubscriptionState.INACTIVE || state == SubscriptionState.CANCELLED, "Subscription is already active");
+    assert(
+        state == SubscriptionState.CREATED || state == SubscriptionState.CANCELLED || state == SubscriptionState.EXPIRED,
+        "Subscription is already in an active or processing state"
+    );
     assert(planId == activePlanId, "Invalid plan ID");
 
     // Retrieve private subscriber secret via off-chain witness
@@ -36,15 +52,66 @@ export circuit authorize(planId: Field): Bytes<32> {
     const commitment = disclose(hash(secret, planId));
 
     subscriberCommitment = commitment;
-    state = SubscriptionState.ACTIVE;
+    state = SubscriptionState.AUTHORIZED;
     sequenceNumber.increment(1);
 
     return commitment;
 }
 
+// Transitions from AUTHORIZED to ACTIVE upon validated initial payment confirmation
+export circuit activate(): void {
+    assert(state == SubscriptionState.AUTHORIZED || state == SubscriptionState.NEXT_CYCLE, "Subscription must be AUTHORIZED or in NEXT_CYCLE to activate");
+    state = SubscriptionState.ACTIVE;
+    sequenceNumber.increment(1);
+    cycleCount.increment(1);
+}
+
+// Marks subscription as BILLING_DUE when cycle window approaches
+export circuit markBillingDue(): void {
+    assert(state == SubscriptionState.ACTIVE, "Subscription must be ACTIVE to mark billing due");
+    state = SubscriptionState.BILLING_DUE;
+    sequenceNumber.increment(1);
+}
+
+// Transitions to PROCESSING when billing execution begins
+export circuit startProcessing(): void {
+    assert(state == SubscriptionState.BILLING_DUE, "Subscription must be BILLING_DUE to process");
+    state = SubscriptionState.PROCESSING;
+    sequenceNumber.increment(1);
+}
+
+// Settles billing cycle upon fiat payment confirmation
+export circuit settlePayment(): void {
+    assert(state == SubscriptionState.PROCESSING, "Subscription must be PROCESSING to settle");
+    state = SubscriptionState.PAID;
+    sequenceNumber.increment(1);
+}
+
+// Advances to next cycle
+export circuit advanceCycle(): void {
+    assert(state == SubscriptionState.PAID, "Subscription must be PAID to advance cycle");
+    state = SubscriptionState.NEXT_CYCLE;
+    sequenceNumber.increment(1);
+}
+
+// Marks as PAST_DUE if payment fails
+export circuit markPastDue(): void {
+    assert(state == SubscriptionState.PROCESSING || state == SubscriptionState.BILLING_DUE, "Invalid state for past due");
+    state = SubscriptionState.PAST_DUE;
+    sequenceNumber.increment(1);
+}
+
 // Cancels the subscription if caller proves knowledge of the secret preimage
 export circuit cancel(): void {
-    assert(state == SubscriptionState.ACTIVE, "Subscription is not active");
+    assert(
+        state == SubscriptionState.AUTHORIZED || 
+        state == SubscriptionState.ACTIVE || 
+        state == SubscriptionState.BILLING_DUE ||
+        state == SubscriptionState.PAID ||
+        state == SubscriptionState.NEXT_CYCLE ||
+        state == SubscriptionState.PAST_DUE,
+        "Subscription cannot be cancelled in current state"
+    );
 
     const secret = getSubscriberSecret();
     const expectedCommitment = disclose(hash(secret, activePlanId));
