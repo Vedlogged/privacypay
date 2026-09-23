@@ -7,6 +7,8 @@
 - **Milestone**: Level 1 — New Moon
 - **Date**: 2026-09-23
 - **Version**: `v0.1.0-level1`
+- **Preprod Contract Address**: `02004a8b79f2dc6138de369c9b10499e0df238aa14d59bc44109720526e82b71`
+- **Live Demo**: [https://privacypay-midnight.vercel.app](https://privacypay-midnight.vercel.app)
 
 ---
 
@@ -16,11 +18,12 @@
 | :--- | :--- | :--- |
 | **1. Repository & Workspace** | Monorepo structure with npm workspaces (`contract`, `frontend`). | Root `package.json` |
 | **2. Compact Contract** | `subscription.compact` implementing privacy commitment scheme. | `contract/src/subscription.compact` |
-| **3. Automated Test Suite** | 8 comprehensive test cases verifying lifecycle transitions and security. | `contract/tests/subscription.test.ts` |
-| **4. Test Execution Results** | Verifiable test execution logs. | `docs/competition/level-1/test-results.md` |
-| **5. Web Application** | Next.js interactive interface with Lace wallet detection & state inspector. | `frontend/` |
-| **6. CI Pipeline** | Automated GitHub Actions workflow for linting, test, and build. | `.github/workflows/level-1-ci.yml` |
-| **7. Architecture & Privacy Docs** | Formal technical architecture and data classification specifications. | `docs/architecture.md`, `docs/privacy-model.md` |
+| **3. Compiled Managed Outputs** | `.wasm` circuit bytecode, `.zkir` intermediate files, TypeScript type bindings. | `managed/subscription/` |
+| **4. Automated Test Suite** | 8 comprehensive test cases verifying lifecycle transitions and security. | `contract/tests/subscription.test.ts` |
+| **5. Test Execution Results** | Verifiable test execution logs (8/8 passed). | `docs/competition/level-1/test-results.md` |
+| **6. Web Application** | Next.js interactive interface with Lace wallet detection & state inspector. | `frontend/` |
+| **7. CI Pipeline** | Automated GitHub Actions workflow for compile, test, and build. | `.github/workflows/level-1-ci.yml` |
+| **8. Architecture & Privacy Docs** | Formal technical architecture and data classification specifications. | `docs/architecture.md`, `docs/privacy-model.md`, `PROPOSAL.md` |
 
 ---
 
@@ -30,15 +33,15 @@
 LEVEL: Level 1 (New Moon)
 STATUS: COMPLETED
 VERSION: v0.1.0-level1
-DEPLOYMENT: Local Compact Simulation & Lace Connector Interface
+CONTRACT ADDRESS: 02004a8b79f2dc6138de369c9b10499e0df238aa14d59bc44109720526e82b71
+COMPILATION: managed/subscription/ (subscription.wasm, zkir/, contract/index.d.ts)
 FEATURES:
   - Compact Subscription State Machine (INACTIVE, ACTIVE, CANCELLED)
-  - Zero-Knowledge Hash Commitment Binding
+  - Zero-Knowledge Hash Commitment Binding (H(secret, planId))
   - Witness Secret Injection & Preimage Validation
   - Lace Wallet Extension Detection
   - Live Ledger State Inspector
 TESTS: 8/8 Passed (100% Coverage of contract transitions)
 SECURITY: Zero on-chain personal data, cryptographic commitment access control
-KNOWN LIMITATIONS: Level 1 focuses on core contract verification; multi-plan indexing and live Preprod submission will be enabled in Level 2.
 NEXT LEVEL: Level 2 — Waxing Crescent (Full Wallet & Preprod Integration)
 ```
