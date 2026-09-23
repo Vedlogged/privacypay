@@ -22,7 +22,12 @@ jobs:
           cache: 'npm'
 
       - name: Install Monorepo Dependencies
-        run: npm install
+        run: |
+          npm install
+          node scripts/setup-sdk-shims.js
+
+      - name: Compile Compact Smart Contract & Managed Bindings
+        run: npm run compile
 
       - name: Run Compact Smart Contract & Subscription Engine Tests
         run: npm test

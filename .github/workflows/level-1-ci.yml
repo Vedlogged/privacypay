@@ -8,7 +8,7 @@ on:
 
 jobs:
   verify:
-    name: Level 1 Verification (Contract & Frontend)
+    name: Level 1 Verification (Contract, Managed Outputs & Frontend)
     runs-on: ubuntu-latest
 
     steps:
@@ -22,7 +22,12 @@ jobs:
           cache: 'npm'
 
       - name: Install Dependencies
-        run: npm install
+        run: |
+          npm install
+          node scripts/setup-sdk-shims.js
+
+      - name: Compile Compact Smart Contract
+        run: npm run compile
 
       - name: Run Compact Contract Test Suite
         run: npm run test
