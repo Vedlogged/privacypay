@@ -1,0 +1,11 @@
+{
+  "version": { "major": 0, "minor": 20 },
+  "circuit_name": "settlePayment",
+  "inputs": [],
+  "outputs": [],
+  "constraints": [
+    { "op": "assert_in_states", "field": "state", "allowed": [4] },
+    { "op": "state_transition", "target": "state", "value": 5 },
+    { "op": "counter_increment", "target": "sequenceNumber", "value": 1 }
+  ]
+}

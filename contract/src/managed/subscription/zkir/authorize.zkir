@@ -1,0 +1,19 @@
+{
+  "version": { "major": 0, "minor": 20 },
+  "circuit_name": "authorize",
+  "inputs": [
+    { "name": "planId", "type": "field", "visibility": "public" },
+    { "name": "secret", "type": "bytes32", "visibility": "private" }
+  ],
+  "outputs": [
+    { "name": "commitment", "type": "bytes32", "visibility": "public" }
+  ],
+  "constraints": [
+    { "op": "assert_in_states", "field": "state", "allowed": [0, 8, 9] },
+    { "op": "assert_equal", "a": "planId", "b": "activePlanId" },
+    { "op": "poseidon_hash", "inputs": ["secret", "planId"], "output": "commitment" },
+    { "op": "disclose", "value": "commitment" },
+    { "op": "state_transition", "target": "state", "value": 1 },
+    { "op": "counter_increment", "target": "sequenceNumber", "value": 1 }
+  ]
+}

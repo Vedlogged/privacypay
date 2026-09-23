@@ -1,0 +1,16 @@
+{
+  "version": { "major": 0, "minor": 20 },
+  "circuit_name": "cancel",
+  "inputs": [
+    { "name": "secret", "type": "bytes32", "visibility": "private" }
+  ],
+  "outputs": [],
+  "constraints": [
+    { "op": "assert_in_states", "field": "state", "allowed": [1, 2, 3, 5, 6, 10] },
+    { "op": "poseidon_hash", "inputs": ["secret", "activePlanId"], "output": "expectedCommitment" },
+    { "op": "disclose", "value": "expectedCommitment" },
+    { "op": "assert_equal", "a": "subscriberCommitment", "b": "expectedCommitment" },
+    { "op": "state_transition", "target": "state", "value": 8 },
+    { "op": "counter_increment", "target": "sequenceNumber", "value": 1 }
+  ]
+}

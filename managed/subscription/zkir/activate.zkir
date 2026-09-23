@@ -1,0 +1,12 @@
+{
+  "version": { "major": 0, "minor": 20 },
+  "circuit_name": "activate",
+  "inputs": [],
+  "outputs": [],
+  "constraints": [
+    { "op": "assert_in_states", "field": "state", "allowed": [1, 6] },
+    { "op": "state_transition", "target": "state", "value": 2 },
+    { "op": "counter_increment", "target": "sequenceNumber", "value": 1 },
+    { "op": "counter_increment", "target": "cycleCount", "value": 1 }
+  ]
+}
