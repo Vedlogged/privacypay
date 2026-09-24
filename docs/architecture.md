@@ -55,7 +55,7 @@ PrivacyPay is an end-to-end privacy-preserving SaaS subscription infrastructure 
 ### 3.2 Smart Contract Responsibilities (`subscription.compact`)
 - Maintaining verifiable state of subscription authorizations.
 - Storing cryptographic commitments `H(subscriberSecret, planId)` rather than plaintext user identities.
-- Verifying transitions (`INACTIVE` -> `ACTIVE` -> `CANCELLED`).
+- Verifying transitions (`INACTIVE` -> `ACTIVE` -> `CANCELLED` and 10-state FSM cycles).
 - Enforcing authorization rules: only the holder of the secret preimage can authorize or cancel the subscription commitment.
 
 ### 3.3 Backend API Responsibilities (Levels 3-6)
@@ -70,9 +70,58 @@ PrivacyPay is an end-to-end privacy-preserving SaaS subscription infrastructure 
 
 ---
 
-## 4. State Machine Definition
+## 4. Sequence Flows & Proof Interactions
 
-The subscription lifecycle on Midnight transitions through well-defined deterministic states:
+### 4.1 Zero-Knowledge Subscription Authorization Flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Subscriber as Subscriber (Browser)
+    participant Wallet as Midnight Lace Wallet
+    participant Client as SubscriptionClient (ZK Engine)
+    participant Contract as Compact Smart Contract
+    participant Preprod as Midnight Preprod Ledger
+
+    Subscriber->>Wallet: Connect Wallet Request (enable)
+    Wallet-->>Subscriber: Return ConnectedAPI session
+    Subscriber->>Client: Select SaaS Plan (e.g. Plan #101)
+    Note over Client: 1. Generate 256-bit CSPRNG Secret<br/>(Kept strictly in local client memory)
+    Note over Client: 2. Formulate Compact Witness:<br/>witness = { getSubscriberSecret() }
+    Note over Client: 3. Compute Commitment:<br/>C = H(secret, planId)
+    Client->>Contract: Evaluate Compact Circuit `authorize(planId)`
+    Contract-->>Client: Generate ZK Proof of Valid Authorization
+    Client->>Wallet: Submit Transaction with Proof & Commitment
+    Wallet->>Preprod: Broadcast shielded transaction
+    Preprod-->>Contract: Update State: CREATED -> AUTHORIZED -> ACTIVE
+    Preprod-->>Subscriber: Return Transaction Hash & Confirmation
+```
+
+### 4.2 Non-Custodial Subscriber Cancellation Flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Subscriber as Subscriber (Browser)
+    participant Client as SubscriptionClient
+    participant Contract as Compact Smart Contract
+    participant Preprod as Midnight Preprod Ledger
+
+    Subscriber->>Client: Request Subscription Cancellation
+    Note over Client: Retrieve local secret preimage from secure session
+    Client->>Contract: Invoke Compact Circuit `cancel(witness)`
+    Note over Contract: Verify H(callerSecret, planId) == stored commitment<br/>(Preimage verified in ZK circuit)
+    Contract-->>Client: Generate ZK Cancellation Proof
+    Client->>Preprod: Submit On-chain Revocation TX
+    Preprod-->>Contract: Update State: ACTIVE -> CANCELLED
+    Preprod-->>Subscriber: Confirm Cancellation with On-chain Receipt
+```
+
+---
+
+## 5. Subscription State Machine Definition
+
+The subscription lifecycle on Midnight transitions through deterministic states managed by the Compact contract simulator and finite state machine:
 
 ```
                   +--------------+
@@ -92,6 +141,7 @@ The subscription lifecycle on Midnight transitions through well-defined determin
                   +--------------+
 ```
 
-1. **INACTIVE**: The registry is initialized with an active plan ID. No active subscriber commitment is bound.
-2. **ACTIVE**: A subscriber provides a private secret witness, creates a verifiable commitment `H(secret, planId)`, and binds it to the ledger.
-3. **CANCELLED**: The commitment owner proves knowledge of the secret preimage to transition the state to `CANCELLED`.
+1. **INACTIVE / CREATED**: The registry is initialized with an active plan ID. No active subscriber commitment is bound.
+2. **AUTHORIZED / ACTIVE**: A subscriber provides a private secret witness, creates a verifiable commitment `H(secret, planId)`, and binds it to the ledger.
+3. **BILLING_DUE / PROCESSING / PAID / NEXT_CYCLE**: Off-chain fiat or crypto billing cycle progression.
+4. **CANCELLED**: The commitment owner proves knowledge of the secret preimage to transition the state to `CANCELLED`.
