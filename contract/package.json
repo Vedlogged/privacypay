@@ -15,15 +15,16 @@
     "compile": "tsc -b",
     "test": "vitest run",
     "test:watch": "vitest",
-    "build": "tsc"
+    "build": "tsc",
+    "postinstall": "node ../scripts/setup-sdk-shims.js || true"
   },
   "dependencies": {
     "@midnight-ntwrk/compact-runtime": "^0.19.0",
-    "@midnight-ntwrk/dapp-connector-api": "^0.4.0",
-    "@midnight-ntwrk/midnight-js-network-provider": "^0.4.0",
-    "@midnight-ntwrk/midnight-js-types": "^0.4.0",
-    "@midnight-ntwrk/midnight-js-contracts": "^0.4.0",
-    "@midnight-ntwrk/ledger": "^0.19.0"
+    "@midnight-ntwrk/dapp-connector-api": "0.4.0",
+    "@midnight-ntwrk/midnight-js-network-provider": "0.4.0",
+    "@midnight-ntwrk/midnight-js-types": "0.4.0",
+    "@midnight-ntwrk/midnight-js-contracts": "0.4.0",
+    "@midnight-ntwrk/ledger": "0.19.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",

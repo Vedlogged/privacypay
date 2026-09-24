@@ -71,7 +71,7 @@ export const SubscriptionConsole: React.FC<SubscriptionConsoleProps> = ({
       }}>
         {logs.length === 0 ? (
           <div style={{ color: 'var(--text-muted)', textAlign: 'center', margin: 'auto' }}>
-            No contract interactions recorded yet. Click "Authorize Subscription" to begin.
+            No contract interactions recorded yet. Click &quot;Authorize Subscription&quot; to begin.
           </div>
         ) : (
           logs.map((log) => (

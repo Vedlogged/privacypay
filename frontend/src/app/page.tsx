@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { PlanCard } from '../components/PlanCard';
 import { StateInspector } from '../components/StateInspector';
 import { SubscriptionConsole } from '../components/SubscriptionConsole';
@@ -55,7 +55,7 @@ export default function Home() {
   };
 
   // Fetch data
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const [prodRes, planRes, subRes] = await Promise.all([
         fetch('/api/products').then((r) => r.json()),
@@ -74,7 +74,7 @@ export default function Home() {
     } catch (err) {
       console.error('Failed to fetch store data:', err);
     }
-  };
+  }, [selectedProductId]);
 
   useEffect(() => {
     fetchData();
@@ -84,7 +84,7 @@ export default function Home() {
       setSecret(client.getCurrentSecret());
     });
     return () => unsubscribe();
-  }, [client]);
+  }, [client, fetchData]);
 
   // Subscribe flow
   const handleSubscribe = async (planId: bigint) => {

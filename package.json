@@ -5,9 +5,11 @@
   "description": "Privacy-first SaaS subscriptions with fiat-friendly payments on Midnight Network",
   "workspaces": [
     "contract",
-    "frontend"
+    "frontend",
+    "packages/*"
   ],
   "scripts": {
+    "postinstall": "node scripts/setup-sdk-shims.js",
     "compile": "npm run compile --workspace=contract",
     "test": "npm run test --workspace=contract",
     "build": "npm run build --workspace=frontend",
@@ -16,11 +18,11 @@
   },
   "dependencies": {
     "@midnight-ntwrk/compact-runtime": "^0.19.0",
-    "@midnight-ntwrk/dapp-connector-api": "^0.4.0",
-    "@midnight-ntwrk/midnight-js-network-provider": "^0.4.0",
-    "@midnight-ntwrk/midnight-js-types": "^0.4.0",
-    "@midnight-ntwrk/midnight-js-contracts": "^0.4.0",
-    "@midnight-ntwrk/ledger": "^0.19.0"
+    "@midnight-ntwrk/dapp-connector-api": "0.4.0",
+    "@midnight-ntwrk/midnight-js-network-provider": "0.4.0",
+    "@midnight-ntwrk/midnight-js-types": "0.4.0",
+    "@midnight-ntwrk/midnight-js-contracts": "0.4.0",
+    "@midnight-ntwrk/ledger": "0.19.0"
   },
   "keywords": [
     "midnight-network",

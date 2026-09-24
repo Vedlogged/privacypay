@@ -86,7 +86,7 @@ export const CustomerPortal: React.FC<CustomerPortalProps> = ({
           </div>
           <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}>No Active Subscriptions Found</h3>
           <p style={{ color: 'var(--text-secondary)', maxWidth: '480px', margin: '0 auto 1.5rem', fontSize: '0.9375rem' }}>
-            You haven't authorized any subscriptions yet. Browse our available SaaS products to start your first privacy-preserving subscription.
+            You have not authorized any subscriptions yet. Browse our available SaaS products to start your first privacy-preserving subscription.
           </p>
         </div>
       ) : (

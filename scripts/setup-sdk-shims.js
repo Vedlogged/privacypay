@@ -4,6 +4,7 @@ const path = require('path');
 const pkgs = [
   {
     name: 'dapp-connector-api',
+    version: '0.4.0',
     main: 'index.js',
     types: 'index.d.ts',
     js: `module.exports = {};`,
@@ -32,6 +33,7 @@ export interface DAppConnectorAPI {
   },
   {
     name: 'midnight-js-network-provider',
+    version: '0.4.0',
     main: 'index.js',
     types: 'index.d.ts',
     js: `const NetworkId = {
@@ -73,6 +75,7 @@ export class MidnightNetworkProvider {
   },
   {
     name: 'midnight-js-types',
+    version: '0.4.0',
     main: 'index.js',
     types: 'index.d.ts',
     js: `module.exports = {};`,
@@ -83,6 +86,7 @@ export type ShieldedBalance = bigint;`
   },
   {
     name: 'midnight-js-contracts',
+    version: '0.4.0',
     main: 'index.js',
     types: 'index.d.ts',
     js: `module.exports = {
@@ -102,6 +106,7 @@ export function createContract<T>(address: ContractAddress, definition: any): De
   },
   {
     name: 'ledger',
+    version: '0.19.0',
     main: 'index.js',
     types: 'index.d.ts',
     js: `module.exports = {
@@ -114,30 +119,52 @@ export function deserializeState(bytes: Uint8Array): any;`
   }
 ];
 
-for (const pkg of pkgs) {
-  const dir = path.join(__dirname, '..', 'node_modules', '@midnight-ntwrk', pkg.name);
-  fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({
-    name: '@midnight-ntwrk/' + pkg.name,
-    version: '0.4.0',
-    main: pkg.main,
-    types: pkg.types
-  }, null, 2));
-  fs.writeFileSync(path.join(dir, pkg.main), pkg.js);
-  fs.writeFileSync(path.join(dir, pkg.types), pkg.dts);
-}
+const rootDir = path.resolve(__dirname, '..');
+const nodeModulesDirs = [
+  path.join(rootDir, 'node_modules'),
+  path.join(rootDir, 'frontend', 'node_modules'),
+  path.join(rootDir, 'contract', 'node_modules')
+];
 
-// Fix exports order in compact-runtime package.json if present
-const compactRuntimePkg = path.join(__dirname, '..', 'node_modules', '@midnight-ntwrk', 'compact-runtime', 'package.json');
-if (fs.existsSync(compactRuntimePkg)) {
-  const data = JSON.parse(fs.readFileSync(compactRuntimePkg, 'utf8'));
-  if (data.exports && data.exports['.']) {
-    data.exports['.'] = {
-      types: './dist/index.d.ts',
-      default: './dist/index.js'
-    };
-    fs.writeFileSync(compactRuntimePkg, JSON.stringify(data, null, 2));
+for (const baseDir of nodeModulesDirs) {
+  if (!fs.existsSync(baseDir)) {
+    try {
+      fs.mkdirSync(baseDir, { recursive: true });
+    } catch (e) {}
+  }
+  for (const pkg of pkgs) {
+    const dir = path.join(baseDir, '@midnight-ntwrk', pkg.name);
+    try {
+      fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({
+        name: '@midnight-ntwrk/' + pkg.name,
+        version: pkg.version,
+        main: pkg.main,
+        types: pkg.types
+      }, null, 2));
+      fs.writeFileSync(path.join(dir, pkg.main), pkg.js);
+      fs.writeFileSync(path.join(dir, pkg.types), pkg.dts);
+    } catch (e) {
+      console.warn(`Could not write shim for ${pkg.name} in ${baseDir}:`, e.message);
+    }
+  }
+
+  // Fix exports order in compact-runtime package.json if present
+  const compactRuntimePkg = path.join(baseDir, '@midnight-ntwrk', 'compact-runtime', 'package.json');
+  if (fs.existsSync(compactRuntimePkg)) {
+    try {
+      const data = JSON.parse(fs.readFileSync(compactRuntimePkg, 'utf8'));
+      if (data.exports && data.exports['.']) {
+        data.exports['.'] = {
+          types: './dist/index.d.ts',
+          default: './dist/index.js'
+        };
+        fs.writeFileSync(compactRuntimePkg, JSON.stringify(data, null, 2));
+      }
+    } catch (e) {
+      console.warn(`Could not patch compact-runtime in ${baseDir}:`, e.message);
+    }
   }
 }
 
-console.log('Successfully configured @midnight-ntwrk packages');
+console.log('Successfully configured @midnight-ntwrk packages and shims');
