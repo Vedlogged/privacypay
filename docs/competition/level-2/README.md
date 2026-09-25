@@ -5,8 +5,9 @@
 - **Milestone**: Level 2 — Waxing Crescent
 - **Date**: 2026-09-23
 - **Version**: `v0.2.0-level2`
-- **Preprod Contract Address**: `02004a8b79f2dc6138de369c9b10499e0df238aa14d59bc44109720526e82b71`
+- **Preprod Contract Address**: `a53b489179903e1b40a8078b59649af9b113a4d9d7da0d8f293e97314b59b68d`
 - **Live Demo**: [https://privacypay-midnight.vercel.app](https://privacypay-midnight.vercel.app)
+- **Preprod Subscan**: [https://midnight-preprod.subscan.io/contract/a53b489179903e1b40a8078b59649af9b113a4d9d7da0d8f293e97314b59b68d](https://midnight-preprod.subscan.io/contract/a53b489179903e1b40a8078b59649af9b113a4d9d7da0d8f293e97314b59b68d)
 
 ---
 

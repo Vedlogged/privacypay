@@ -25,12 +25,14 @@ PrivacyPay's Compact smart contract is deployed on the **Midnight Preprod Testne
 | :--- | :--- |
 | **Network Name** | `Midnight Testnet (Preprod)` |
 | **Network ID** | `midnight-testnet-preprod` |
-| **Contract Address** | `02004a8b79f2dc6138de369c9b10499e0df238aa14d59bc44109720526e82b71` |
-| **Deployment TX Hash** | `0x7b1c4e92a83dfa1059f81d45c7b39a48f0293817456bc40285910fae12048cd3` |
+| **Contract Address** | `a53b489179903e1b40a8078b59649af9b113a4d9d7da0d8f293e97314b59b68d` |
+| **Deployment TX Hash** | `25ab1b161da21f30ed645c2f02efa7f79c77ec31ab99814167be4fbae1be2a7d` |
+| **Block Height** | `2704759` |
 | **Compact Compiler** | `v0.23.0` (Language Version `>= 0.20`) |
 | **Compilation Output** | `managed/subscription/` (`.wasm`, `.zkir`, `contract/index.d.ts`, `witness/index.d.ts`) |
 | **RPC Endpoint** | `https://rpc.preprod.midnight.network` |
-| **Indexer Endpoint** | `https://indexer.preprod.midnight.network` |
+| **Indexer Endpoint** | `https://indexer.preprod.midnight.network/api/v4/graphql` |
+| **Subscan Explorer** | [View Contract](https://midnight-preprod.subscan.io/contract/a53b489179903e1b40a8078b59649af9b113a4d9d7da0d8f293e97314b59b68d) |
 | **Exported Circuits** | `authorize`, `activate`, `markBillingDue`, `startProcessing`, `settlePayment`, `advanceCycle`, `markPastDue`, `cancel` |
 
 ---

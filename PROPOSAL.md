@@ -206,8 +206,10 @@ PrivacyPay is structured as a 6-phase engineering milestone progression:
 
 ## 5. Summary & Verification Reference
 
-- **Contract Address (Preprod)**: `02004a8b79f2dc6138de369c9b10499e0df238aa14d59bc44109720526e82b71`
+- **Contract Address (Preprod)**: `a53b489179903e1b40a8078b59649af9b113a4d9d7da0d8f293e97314b59b68d`
+- **Deployment Transaction**: `25ab1b161da21f30ed645c2f02efa7f79c77ec31ab99814167be4fbae1be2a7d` (Block #2704759)
+- **Explorer**: [https://midnight-preprod.subscan.io/contract/a53b489179903e1b40a8078b59649af9b113a4d9d7da0d8f293e97314b59b68d](https://midnight-preprod.subscan.io/contract/a53b489179903e1b40a8078b59649af9b113a4d9d7da0d8f293e97314b59b68d)
 - **Network ID**: `midnight-testnet-preprod`
 - **Compact Compiler**: `v0.23.0`
-- **Test Suite**: 15/15 passing tests (`npm test`)
+- **Test Suite**: 23/23 passing tests (`npm test`)
 - **License**: Apache-2.0

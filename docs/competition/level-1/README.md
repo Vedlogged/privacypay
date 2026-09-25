@@ -7,7 +7,7 @@
 - **Milestone**: Level 1 — New Moon
 - **Date**: 2026-09-23
 - **Version**: `v0.1.0-level1`
-- **Preprod Contract Address**: `02004a8b79f2dc6138de369c9b10499e0df238aa14d59bc44109720526e82b71`
+- **Preprod Contract Address**: `a53b489179903e1b40a8078b59649af9b113a4d9d7da0d8f293e97314b59b68d`
 - **Live Demo**: [https://privacypay-midnight.vercel.app](https://privacypay-midnight.vercel.app)
 
 ---
@@ -33,7 +33,7 @@
 LEVEL: Level 1 (New Moon)
 STATUS: COMPLETED
 VERSION: v0.1.0-level1
-CONTRACT ADDRESS: 02004a8b79f2dc6138de369c9b10499e0df238aa14d59bc44109720526e82b71
+CONTRACT ADDRESS: a53b489179903e1b40a8078b59649af9b113a4d9d7da0d8f293e97314b59b68d
 COMPILATION: managed/subscription/ (subscription.wasm, zkir/, contract/index.d.ts)
 FEATURES:
   - Compact Subscription State Machine (INACTIVE, ACTIVE, CANCELLED)

@@ -1,0 +1,17 @@
+{
+  "network": "Midnight Preprod Testnet",
+  "networkId": "midnight-testnet-preprod",
+  "contractAddress": "a53b489179903e1b40a8078b59649af9b113a4d9d7da0d8f293e97314b59b68d",
+  "txHash": "25ab1b161da21f30ed645c2f02efa7f79c77ec31ab99814167be4fbae1be2a7d",
+  "blockHeight": 2704759,
+  "deployedAt": "2026-09-25T14:27:35.707Z",
+  "constructorArgs": {
+    "initialPlanId": "101",
+    "initialMerchant": "0x3a9f4c82b17e4d89a23c7f9104b901e82b67f10a"
+  },
+  "endpoints": {
+    "indexer": "https://indexer.preprod.midnight.network/api/v4/graphql",
+    "nodeRpc": "https://rpc.preprod.midnight.network"
+  },
+  "explorerUrl": "https://midnight-preprod.subscan.io/contract/a53b489179903e1b40a8078b59649af9b113a4d9d7da0d8f293e97314b59b68d"
+}

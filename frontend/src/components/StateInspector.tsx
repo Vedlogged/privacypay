@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
-import { Database, Lock, Shield, Hash, RefreshCw, UserCheck } from 'lucide-react';
+import React, { useState } from 'react';
+import { Database, Lock, Shield, Hash, RefreshCw, UserCheck, ExternalLink, Copy, Check } from 'lucide-react';
 import { ContractLedgerState, SubscriptionState } from '@privacy-pay/contract';
 import { PrivacyBadge } from './PrivacyBadge';
+import { PREPROD_NETWORK_CONFIG } from '../lib/midnight-connector';
 
 interface StateInspectorProps {
   ledgerState: ContractLedgerState;
@@ -11,6 +12,14 @@ interface StateInspectorProps {
 }
 
 export const StateInspector: React.FC<StateInspectorProps> = ({ ledgerState, secret }) => {
+  const [copied, setCopied] = useState(false);
+
+  const copyContract = () => {
+    navigator.clipboard.writeText(PREPROD_NETWORK_CONFIG.defaultContractAddress);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   const getStatusBadge = (state: SubscriptionState) => {
     switch (state) {
       case SubscriptionState.ACTIVE:
@@ -46,6 +55,69 @@ export const StateInspector: React.FC<StateInspectorProps> = ({ ledgerState, sec
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        {/* Deployed Contract Address on Preprod */}
+        <div style={{
+          background: 'rgba(56, 189, 248, 0.05)',
+          border: '1px solid rgba(56, 189, 248, 0.25)',
+          padding: '0.85rem 1rem',
+          borderRadius: '0.625rem'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
+            <span style={{ fontSize: '0.75rem', color: '#38bdf8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Midnight Preprod Contract Address
+            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <button
+                onClick={copyContract}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.3rem',
+                  fontSize: '0.7rem',
+                  padding: '0.2rem 0.5rem',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '0.375rem',
+                  color: copied ? 'var(--accent-success)' : 'var(--text-secondary)',
+                  cursor: 'pointer'
+                }}
+              >
+                {copied ? <Check size={11} /> : <Copy size={11} />}
+                {copied ? 'Copied' : 'Copy'}
+              </button>
+              <a
+                href={`https://midnight-preprod.subscan.io/contract/${PREPROD_NETWORK_CONFIG.defaultContractAddress}`}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.3rem',
+                  fontSize: '0.7rem',
+                  padding: '0.2rem 0.5rem',
+                  background: 'rgba(56, 189, 248, 0.1)',
+                  border: '1px solid rgba(56, 189, 248, 0.3)',
+                  borderRadius: '0.375rem',
+                  color: '#38bdf8',
+                  textDecoration: 'none'
+                }}
+              >
+                <ExternalLink size={11} />
+                Subscan Explorer
+              </a>
+            </div>
+          </div>
+          <div style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: '0.8125rem',
+            color: 'var(--text-primary)',
+            wordBreak: 'break-all',
+            fontWeight: 500
+          }}>
+            {PREPROD_NETWORK_CONFIG.defaultContractAddress}
+          </div>
+        </div>
+
         {/* Subscription Status & Plan */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <div style={{ background: 'rgba(0, 0, 0, 0.25)', padding: '0.85rem', borderRadius: '0.625rem', border: '1px solid var(--border-subtle)' }}>

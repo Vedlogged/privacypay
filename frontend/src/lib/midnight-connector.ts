@@ -31,10 +31,10 @@ declare global {
 export const PREPROD_NETWORK_CONFIG = {
   networkId: NetworkId.Testnet,
   networkName: 'Midnight Preprod Testnet',
-  nodeRpcUrl: 'https://rpc.preprod.midnight.network',
-  indexerUrl: 'https://indexer.preprod.midnight.network',
-  indexerWsUrl: 'wss://indexer.preprod.midnight.network/ws',
-  defaultContractAddress: '02004a8b79f2dc6138de369c9b10499e0df238aa14d59bc44109720526e82b71'
+  nodeRpcUrl: process.env.NEXT_PUBLIC_MIDNIGHT_RPC_URL || 'https://rpc.preprod.midnight.network',
+  indexerUrl: process.env.NEXT_PUBLIC_MIDNIGHT_INDEXER_URL || 'https://indexer.preprod.midnight.network/api/v4/graphql',
+  indexerWsUrl: process.env.NEXT_PUBLIC_MIDNIGHT_INDEXER_WS_URL || 'wss://indexer.preprod.midnight.network/api/v4/graphql/ws',
+  defaultContractAddress: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || 'a53b489179903e1b40a8078b59649af9b113a4d9d7da0d8f293e97314b59b68d'
 };
 
 // Cached connected API session

@@ -4,8 +4,9 @@
 - **Milestone**: Level 1 (New Moon)
 - **Project**: PrivacyPay
 - **Objective**: Establish the Midnight project environment, implement the core Compact subscription contract, compile contract circuits to `managed/` artifacts, develop verifiable state transition test suites, and deliver an interactive prototype demonstrating the privacy-preserving subscription flow.
-- **Contract Address (Preprod)**: `02004a8b79f2dc6138de369c9b10499e0df238aa14d59bc44109720526e82b71`
+- **Contract Address (Preprod)**: `a53b489179903e1b40a8078b59649af9b113a4d9d7da0d8f293e97314b59b68d`
 - **Live Demo**: [https://privacypay-midnight.vercel.app](https://privacypay-midnight.vercel.app)
+- **Preprod Subscan**: [https://midnight-preprod.subscan.io/contract/a53b489179903e1b40a8078b59649af9b113a4d9d7da0d8f293e97314b59b68d](https://midnight-preprod.subscan.io/contract/a53b489179903e1b40a8078b59649af9b113a4d9d7da0d8f293e97314b59b68d)
 
 ---
 

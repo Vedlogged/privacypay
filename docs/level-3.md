@@ -4,8 +4,9 @@
 - **Milestone**: Level 3 (First Quarter)
 - **Project**: PrivacyPay
 - **Objective**: Elevate PrivacyPay into a production-grade decentralized application featuring full multi-role portals (Customer & Merchant), a robust Subscription State Machine Engine, end-to-end API Route Handlers, automated recurring billing simulation, comprehensive `PROPOSAL.md` product idea submission, and hardened security controls.
-- **Contract Address (Preprod)**: `02004a8b79f2dc6138de369c9b10499e0df238aa14d59bc44109720526e82b71`
+- **Contract Address (Preprod)**: `a53b489179903e1b40a8078b59649af9b113a4d9d7da0d8f293e97314b59b68d`
 - **Live Demo**: [https://privacypay-midnight.vercel.app](https://privacypay-midnight.vercel.app)
+- **Preprod Subscan**: [https://midnight-preprod.subscan.io/contract/a53b489179903e1b40a8078b59649af9b113a4d9d7da0d8f293e97314b59b68d](https://midnight-preprod.subscan.io/contract/a53b489179903e1b40a8078b59649af9b113a4d9d7da0d8f293e97314b59b68d)
 - **Proposal Document**: [PROPOSAL.md](PROPOSAL.md)
 
 ---
